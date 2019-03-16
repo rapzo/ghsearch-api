@@ -1,6 +1,7 @@
 const url = require('url')
 const querystring = require('querystring')
 const {send} = require('micro')
+const cors = require('micro-cors')
 const Octokit = require('@octokit/rest')
 const {ApiError} = require('./error')
 
@@ -11,14 +12,15 @@ const octokit = new Octokit({
   auth: `token ${TOKEN}`,
 })
 
-const handleSearch = async ({q, page = 0, limit = 10}) => {
+const handleSearch = async ({q, page = 0, perPage = 10}) => {
   const {data} = await octokit.search.users({
-    q: `${q}+type:users`,
+    q,
+    page,
+    per_page: perPage
   })
-  const {items} = data
   // should do something with headers?
 
-  return {items}
+  return data
 }
 
 const handleError = fn => async (req, res) => {
@@ -35,7 +37,15 @@ const handleError = fn => async (req, res) => {
   }
 }
 
-module.exports = handleError(async (req, res) => {
+const handleCors = cors({
+  allowMethods: ['GET'],
+  origin: [
+    // 'localhost:4200',
+    '*',
+  ]
+})
+
+module.exports = handleCors(handleError(async (req, res) => {
   if (req.method !== 'GET') throw new ApiError(404)
 
   const {pathname, search} = url.parse(req.url)
@@ -58,4 +68,4 @@ module.exports = handleError(async (req, res) => {
   )
 
   throw new ApiError(404)
-})
+}))

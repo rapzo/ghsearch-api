@@ -1,0 +1,14 @@
+[Unit]
+Description=Search GitHub users proxy
+After=network.target
+
+[Service]
+WorkingDirectory=/usr/local/apps/ghsearch-api
+Environment=NODE_PORT=3000
+Type=simple
+User=ubuntu
+ExecStart=/usr/bin/npm run launch
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

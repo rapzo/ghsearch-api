@@ -2,7 +2,7 @@ const micro = require('micro')
 const test = require('ava')
 const listen = require('test-listen')
 const got = require('got')
-const app = require('./app')
+const app = require('.')
 const {send} = micro
 
 test('/', async t => {

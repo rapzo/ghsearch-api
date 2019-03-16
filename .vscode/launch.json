@@ -7,6 +7,15 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Launch Service",
+      "program": "${workspaceFolder}/service.js",
+      "env": {
+        "GITHUB_API_TOKEN": ""
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Test",
       "program": "${workspaceFolder}/node_modules/ava/profile.js",
       "args": [
@@ -22,8 +31,11 @@
       "name": "Launch",
       "program": "${workspaceFolder}/node_modules/.bin/micro-dev",
       "args": [
-        "app.js"
-      ]
+        "index.js"
+      ],
+      "env": {
+        "GITHUB_API_TOKEN": ""
+      }
     }
   ]
 }
