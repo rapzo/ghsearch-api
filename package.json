@@ -6,7 +6,8 @@
   "scripts": {
     "start": "cat .env | micro-dev app.js",
     "test": "ava",
-    "service": "micro app.js"
+    "lint": "xo",
+    "build": "sh build.sh"
   },
   "keywords": [],
   "author": "",

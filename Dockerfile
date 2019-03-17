@@ -2,6 +2,7 @@ FROM node:lts-jessie-slim
 
 RUN mkdir -p /srv/ghsearch-api
 WORKDIR /srv/ghsearch-api
+COPY dist/ ./
 
 ARG token
 ENV GITHUB_API_TOKEN $token

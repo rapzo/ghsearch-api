@@ -3,9 +3,16 @@ const querystring = require('querystring')
 const {send} = require('micro')
 const cors = require('micro-cors')
 const Octokit = require('@octokit/rest')
-const {ApiError} = require('./error')
 
 const TOKEN = process.env.GITHUB_API_TOKEN
+
+const ApiError = class extends Error {
+  constructor(statusCode, message) {
+    super(message)
+
+    this.statusCode = statusCode
+  }
+}
 
 const octokit = new Octokit({
   // see "Authentication" section below
