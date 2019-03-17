@@ -4,8 +4,8 @@ RUN mkdir -p /srv/ghsearch-api
 WORKDIR /srv/ghsearch-api
 COPY dist/ ./
 
-ARG token
-ENV GITHUB_API_TOKEN $token
+ARG GITHUB_API_TOKEN
+ENV GITHUB_API_TOKEN $GITHUB_API_TOKEN
 
 CMD ["node", "service.js"]
 
