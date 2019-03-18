@@ -7,16 +7,24 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Service",
+      "name": "prod",
       "program": "${workspaceFolder}/service.js",
-      "env": {
-        "GITHUB_API_TOKEN": ""
-      }
+      "envFile": "${workspaceFolder}/.env"
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Test",
+      "name": "dev",
+      "program": "${workspaceFolder}/node_modules/.bin/micro-dev",
+      "args": [
+        "index.js"
+      ],
+      "envFile": "${workspaceFolder}/.env"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "test",
       "program": "${workspaceFolder}/node_modules/ava/profile.js",
       "args": [
         "${file}"
@@ -24,18 +32,6 @@
       "skipFiles": [
         "<node_internals>/**/*.js"
       ]
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch",
-      "program": "${workspaceFolder}/node_modules/.bin/micro-dev",
-      "args": [
-        "index.js"
-      ],
-      "env": {
-        "GITHUB_API_TOKEN": ""
-      }
     }
   ]
 }
