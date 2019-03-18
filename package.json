@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cat .env | micro-dev app.js",
+    "start": "GITHUB_API_TOKEN=$(cat .env) micro-dev index.js",
     "test": "ava",
     "lint": "xo",
     "build": "sh build.sh"
