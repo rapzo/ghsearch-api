@@ -57,22 +57,22 @@ module.exports = handleCors(handleError(async (req, res) => {
 
   const {pathname, search} = url.parse(req.url)
 
-  if (!pathname) throw new ApiError(404, 'Bad pathname')
+  if (pathname === '/search') {
+    if (!search) throw new ApiError(
+      404,
+      'Missing search conditions'
+    )
+  
+    const query = querystring.parse(search.substr(1))
+  
+    if (!query.q) throw new ApiError(404, 'Missing search conditions')
 
-  if (!search) throw new ApiError(
-    404,
-    'Missing search conditions'
-  )
-
-  const query = querystring.parse(search.substr(1))
-
-  if (!query.q) throw new ApiError(404, 'Missing search conditions')
-
-  if (pathname === '/search') return send(
-    res,
-    200,
-    await handleSearch(query)
-  )
+    return send(
+      res,
+      200,
+      await handleSearch(query)
+    )
+  }
 
   send(res, 200)
 }))
