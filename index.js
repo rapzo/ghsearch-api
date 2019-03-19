@@ -55,6 +55,8 @@ const handleCors = cors({
 module.exports = handleCors(handleError(async (req, res) => {
   if (req.method !== 'GET') throw new ApiError(404)
 
+  if (pathname === '/hb') return send(res, 200)
+
   const {pathname, search} = url.parse(req.url)
 
   if (pathname === '/search') {
