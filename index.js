@@ -74,5 +74,5 @@ module.exports = handleCors(handleError(async (req, res) => {
     await handleSearch(query)
   )
 
-  throw new ApiError(404)
+  send(res, 200)
 }))
