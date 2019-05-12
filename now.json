@@ -1,5 +1,9 @@
 {
   "version": 2,
-  "builds": [{ "src": "service.js", "use": "@now/node" }],
-  "routes": [{ "src": "/search", "dest": "service.js", "methods": ["POST"] }]
+  "builds": [
+    { "src": "index.js", "use": "now-micro" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "/index.js" }
+  ]
 }
