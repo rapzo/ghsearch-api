@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "GITHUB_API_TOKEN=$(cat .env) micro-dev index.js",
+    "start": "cat .env | micro-dev index.js",
     "test": "ava",
     "lint": "xo",
     "build": "sh build.sh"
@@ -13,8 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@octokit/rest": "^16.18.1",
-    "aws-sdk": "^2.422.0",
+    "graphql-request": "^1.8.2",
     "micro": "^9.3.3",
     "micro-cors": "^0.1.1"
   },
@@ -23,6 +22,7 @@
     "got": "^9.6.0",
     "micro-dev": "^3.0.0",
     "nock": "^10.0.6",
+    "sinon": "^7.3.2",
     "test-listen": "^1.1.0",
     "xo": "^0.24.0"
   }

@@ -2,9 +2,20 @@ const url = require('url')
 const querystring = require('querystring')
 const {send} = require('micro')
 const cors = require('micro-cors')
-const Octokit = require('@octokit/rest')
+const {GraphQLClient} = require('graphql-request')
+const {search} = require('./queries')
+const {GITHUB_API_TOKEN} = process.env
 
-const TOKEN = process.env.GITHUB_API_TOKEN
+if (!GITHUB_API_TOKEN) {
+  console.error('Application cannot run without the GITHUB_API_TOKEN')
+  process.exit(-1)
+}
+
+const client = new GraphQLClient('https://api.github.com/graphql', {
+  headers: {
+    Authorization: `bearer ${GITHUB_API_TOKEN}`,
+  },
+})
 
 const ApiError = class extends Error {
   constructor(statusCode, message) {
@@ -14,20 +25,35 @@ const ApiError = class extends Error {
   }
 }
 
-const octokit = new Octokit({
-  // see "Authentication" section below
-  auth: `token ${TOKEN}`,
-})
-
-const handleSearch = async ({q, page = 0, perPage = 10}) => {
-  const {data} = await octokit.search.users({
-    q,
-    page,
-    per_page: perPage
+const handleSearch = async ({q, per_page = 10, page}) => {
+  const {
+    data,
+    // @TODO: handle gh errors
+    errors,
+    // @TODO: handle rate limits
+    headers,
+    // @TODO: handle status mapping
+    status,
+  } = await client.rawRequest(search, {
+    query: q,
+    first: per_page,
+    cursor: page,
   })
-  // should do something with headers?
-
-  return data
+  const {pageInfo, userCount, edges} = data.search
+  const items = edges.map(({node, cursor}) => ({
+    ...node,
+    followers: node.followers.totalCount,
+    following: node.following.totalCount,
+    repositories: node.repositories.totalCount,
+    starredRepositories: node.repositories.totalCount,
+    repositoriesContributedTo: node.repositoriesContributedTo.totalCount,
+  }))
+  
+  return {
+    pageInfo,
+    userCount,
+    items,
+  }
 }
 
 const handleError = fn => async (req, res) => {
@@ -47,7 +73,6 @@ const handleError = fn => async (req, res) => {
 const handleCors = cors({
   allowMethods: ['GET'],
   origin: [
-    // 'localhost:4200',
     '*',
   ]
 })
@@ -68,8 +93,6 @@ module.exports = handleCors(handleError(async (req, res) => {
   
     const query = querystring.parse(search.substr(1))
   
-    if (!query.q) throw new ApiError(404, 'Missing search conditions')
-
     return send(
       res,
       200,

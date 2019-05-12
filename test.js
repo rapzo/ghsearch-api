@@ -1,13 +1,20 @@
+// tests need some love
+process.env.GITHUB_API_TOKEN = 'xxx'
+
 const micro = require('micro')
 const test = require('ava')
 const listen = require('test-listen')
 const got = require('got')
+const nock = require('nock')
+const sinon = require('sinon')
+const {GraphQLClient} = require('graphql-request')
 const app = require('.')
 const {send} = micro
 
+const client = new GraphQLClient('http://localhost')
+
 test('/', async t => {
   const service = micro(app)
-
   const url = await listen(service)
 
   try {
@@ -20,7 +27,6 @@ test('/', async t => {
 
 test('/search', async t => {
   const service = micro(app)
-
   const url = await listen(service)
 
   try {
@@ -33,7 +39,6 @@ test('/search', async t => {
 
 test('/search?q=something', async t => {
   const service = micro(app)
-
   const url = await listen(service)
 
   const {statusCode, body} = await got(`${url}/search?q=something`)
