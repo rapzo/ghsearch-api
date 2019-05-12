@@ -93,11 +93,7 @@ module.exports = handleCors(handleError(async (req, res) => {
   
     const query = querystring.parse(search.substr(1))
   
-    return send(
-      res,
-      200,
-      await handleSearch(query)
-    )
+    return send(res, 200, await handleSearch(query))
   }
 
   send(res, 200)

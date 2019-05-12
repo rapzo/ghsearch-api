@@ -1,0 +1,4 @@
+{
+  "version": 2,
+  "builds": [{ "src": "service.js", "use": "@now/node" }]
+}
